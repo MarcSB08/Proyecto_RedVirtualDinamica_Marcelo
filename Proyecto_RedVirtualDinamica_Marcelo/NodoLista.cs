@@ -11,6 +11,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         #region Atributos
         public Paquete Datos { get; set; }
         public NodoLista Siguiente { get; set; }
+        public NodoLista Anterior { get; set; }
         #endregion
 
         #region Metodos
@@ -18,6 +19,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         {
             Datos = datos;
             Siguiente = null;
+            Anterior = null;
         }
         #endregion
     }
