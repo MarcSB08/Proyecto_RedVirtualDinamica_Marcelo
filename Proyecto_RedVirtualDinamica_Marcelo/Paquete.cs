@@ -8,27 +8,44 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public class Paquete
     {
+        #region Atributos
         public string IDPaquete { get; set; }
         public string IPOrigen { get; set; }
         public string IPDestino { get; set; }
         public int NumeroSecuencia { get; set; }
         public char Dato { get; set; }
         public EstadoPaquete Estado { get; set; }
-        public Stack<string> Traza { get; set; }
+        public ListaEnlazada<string> Traza { get; set; }
+        #endregion
 
+        #region Metodos
         public Paquete()
         {
-            Traza = new Stack<string>();
+            Traza = new ListaEnlazada<string>();
+            Traza.ConvertirAPila();
         }
 
         public void AgregarTraza(string dispositivo, string ip)
         {
-            Traza.Push($"{dispositivo} ({ip})");
+            Traza.Push($"{dispositivo}|{ip}");
         }
 
-        public string ObtenerTraza()
+        public IEnumerable<string> ObtenerTraza()
         {
-            return string.Join(" → ", Traza);
+            ListaEnlazada<string> copia = new ListaEnlazada<string>();
+            NodoLista<string> actual = Traza.Cabeza;
+            while (actual != null)
+            {
+                copia.InsertarFinal(actual.Datos);
+                actual = actual.Siguiente;
+            }
+            copia.ConvertirAPila();
+
+            while (!copia.EstaVacia())
+            {
+                yield return copia.Pop();
+            }
         }
+        #endregion
     }
 }

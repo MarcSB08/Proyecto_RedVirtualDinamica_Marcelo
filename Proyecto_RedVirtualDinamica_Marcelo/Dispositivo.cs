@@ -8,10 +8,13 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public abstract class Dispositivo
     {
+        #region Atributos
         public string IP { get; set; }
         public string Nombre { get; set; }
         public ListaEnlazada<Paquete> ColaEnvio { get; set; }
+        #endregion
 
+        #region Metodos
         protected Dispositivo(string ip, string nombre)
         {
             IP = ip;
@@ -22,5 +25,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         public abstract bool RecibirPaquete(Paquete paquete);
         public abstract Paquete EnviarPaquete();
         public abstract string ObtenerEstado();
+        #endregion
     }
 }

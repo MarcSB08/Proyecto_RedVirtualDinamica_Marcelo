@@ -29,9 +29,25 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                         red.Enviar();
                         break;
                     case "4":
+                        red.VisualizarTrazaPaquete();
                         break;
                     case "5":
                         red.MostrarStatusRed();
+                        break;
+                    case "6":
+                        red.MostrarStatusSubred();
+                        break;
+                    case "7":
+                        red.MostrarStatusEquipo();
+                        break;
+                    case "8":
+                        red.EliminarPaquete();
+                        break;
+                    case "9":
+                        red.VisualizarMensajesRecibidos();
+                        break;
+                    case "10":
+                        red.ConsultarInformacionPaquete();
                         break;
                     case "0":
                         Interfaz.Adios();

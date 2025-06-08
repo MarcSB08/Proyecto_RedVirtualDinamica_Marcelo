@@ -10,7 +10,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
     public static class Interfaz
     {
         #region Metodos
-
         public static string Menu()
         {
             Console.Clear();
@@ -45,48 +44,42 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 
         public static void Borde()
         {
-            // Obtener las dimensiones actuales de la consola
-            int width = Console.WindowWidth - 1; // Ajustar para evitar salto de línea
+            int width = Console.WindowWidth - 1;
             int height = Console.WindowHeight;
 
-            // Guardar la posición actual del cursor
             int original_left = Console.CursorLeft;
             int original_top = Console.CursorTop;
 
-            // Dibujar las esquinas
             Console.SetCursorPosition(0, 0);
-            Console.Write("╔"); // Esquina superior izquierda
+            Console.Write("╔");
 
             Console.SetCursorPosition(width - 1, 0);
-            Console.Write("╗"); // Esquina superior derecha
+            Console.Write("╗");
 
             Console.SetCursorPosition(0, height - 1);
-            Console.Write("╚"); // Esquina inferior izquierda
+            Console.Write("╚");
 
             Console.SetCursorPosition(width - 1, height - 1);
-            Console.Write("╝"); // Esquina inferior derecha
+            Console.Write("╝");
 
-            // Dibujar los bordes horizontales
             for (int x = 1; x < width - 1; x++)
             {
                 Console.SetCursorPosition(x, 0);
-                Console.Write("═"); // Borde superior
+                Console.Write("═");
 
                 Console.SetCursorPosition(x, height - 1);
-                Console.Write("═"); // Borde inferior
+                Console.Write("═");
             }
 
-            // Dibujar los bordes verticales
             for (int y = 1; y < height - 1; y++)
             {
                 Console.SetCursorPosition(0, y);
-                Console.Write("║"); // Borde izquierdo
+                Console.Write("║");
 
                 Console.SetCursorPosition(width - 1, y);
-                Console.Write("║"); // Borde derecho
+                Console.Write("║");
             }
 
-            // Restaurar la posición original del cursor
             Console.SetCursorPosition(original_left, original_top);
         }
 
@@ -155,7 +148,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             Console.Write($"ERROR: {mensaje}");
             Console.ResetColor();
         }
-
         #endregion
     }
 }

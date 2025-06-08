@@ -8,13 +8,16 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public class Mensaje
     {
+        #region Atributos
         public string IDMensaje { get; set; }
         public string IPOrigen { get; set; }
         public string IPDestino { get; set; }
         public string Contenido { get; set; }
         public EstadoMensaje Estado { get; set; }
         public ListaEnlazada<Paquete> Paquetes { get; set; }
+        #endregion
 
+        #region Metodos
         public Mensaje(string id, string ipOrigen, string ipDestino, string contenido)
         {
             IDMensaje = id;
@@ -24,7 +27,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             Estado = EstadoMensaje.Nuevo;
             Paquetes = new ListaEnlazada<Paquete>();
 
-            // Crear paquetes para cada carácter del mensaje
             for (int i = 0; i < contenido.Length; i++)
             {
                 Paquete paquete = new Paquete
@@ -41,5 +43,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 Paquetes.InsertarFinal(paquete);
             }
         }
+        #endregion
     }
 }

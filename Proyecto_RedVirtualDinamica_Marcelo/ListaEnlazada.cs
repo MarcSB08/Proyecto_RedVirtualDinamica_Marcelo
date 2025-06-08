@@ -8,10 +8,13 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public class ListaEnlazada<T>
     {
+        #region Atributos
         public NodoLista<T> Cabeza { get; private set; }
         public NodoLista<T> Cola { get; private set; }
         public int Count { get; private set; }
+        #endregion
 
+        #region Metodos
         public ListaEnlazada()
         {
             Cabeza = null;
@@ -155,5 +158,35 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 actual = actual.Siguiente;
             }
         }
+
+        // Metodos para funcionar como Pila dinamica (para la traza)
+        public void Push(T dato)
+        {
+            InsertarInicio(dato);
+        }
+
+        public T Pop()
+        {
+            if (EstaVacia())
+                return default(T);
+            return EliminarInicio();
+        }
+
+        public void ConvertirAPila()
+        {
+            if (Count <= 1) return;
+
+            ListaEnlazada<T> temp = new ListaEnlazada<T>();
+            while (!EstaVacia())
+            {
+                temp.InsertarFinal(EliminarInicio());
+            }
+
+            while (!temp.EstaVacia())
+            {
+                InsertarInicio(temp.EliminarInicio());
+            }
+        }
+        #endregion
     }
 }

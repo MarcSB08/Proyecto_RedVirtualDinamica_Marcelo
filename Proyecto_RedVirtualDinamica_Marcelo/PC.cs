@@ -8,9 +8,12 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public class PC : Dispositivo
     {
+        #region Atributos
         public ListaEnlazada<Paquete> ColaRecibidos { get; set; }
         public ListaEnlazada<Paquete> MensajesRecibidos { get; set; }
+        #endregion
 
+        #region Metodos
         public PC(string ip, string nombre) : base(ip, nombre)
         {
             ColaRecibidos = new ListaEnlazada<Paquete>();
@@ -38,12 +41,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             return paquete;
         }
 
-        public void ProcesarMensajesRecibidos()
-        {
-            // Implementación para procesar mensajes completos
-            // Esta lógica debería verificar mensajes completos y moverlos a MensajesRecibidos
-        }
-
         public override string ObtenerEstado()
         {
             return $"PC {Nombre} ({IP})\n" +
@@ -51,5 +48,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                    $" - Paquetes recibidos: {ColaRecibidos.Count}\n" +
                    $" - Mensajes completos recibidos: {MensajesRecibidos.Count}";
         }
+        #endregion
     }
 }

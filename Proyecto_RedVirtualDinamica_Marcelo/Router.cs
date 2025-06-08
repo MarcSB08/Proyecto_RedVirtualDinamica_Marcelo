@@ -8,9 +8,12 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public class Router : Dispositivo
     {
+        #region Atributos
         private const int CapacidadMaxima = 4;
         public Red Red { get; set; }
+        #endregion
 
+        #region Metodos
         public Router(string ip, string nombre, Red red) : base(ip, nombre)
         {
             Red = red;
@@ -38,24 +41,12 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             return paquete;
         }
 
-        public bool ReenviarPaquete(Paquete paquete)
-        {
-            // Lógica para reenviar a otro router si este está lleno
-            foreach (var router in Red.ObtenerRouters())
-            {
-                if (router.IP != IP && router.RecibirPaquete(paquete))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public override string ObtenerEstado()
         {
             return $"Router {Nombre} ({IP})\n" +
                    $" - Paquetes en cola: {ColaEnvio.Count}/{CapacidadMaxima}\n" +
                    $" - Estado: {(ColaEnvio.Count >= CapacidadMaxima ? "Lleno" : "Disponible")}";
         }
+        #endregion
     }
 }
