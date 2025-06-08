@@ -8,16 +8,13 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public class PC : Dispositivo
     {
-        #region Atributos
-        public ListaEnlazada ColaRecibidos { get; set; }
-        public ListaEnlazada MensajesRecibidos { get; set; }
-        #endregion
+        public ListaEnlazada<Paquete> ColaRecibidos { get; set; }
+        public ListaEnlazada<Paquete> MensajesRecibidos { get; set; }
 
-        #region Metodos
         public PC(string ip, string nombre) : base(ip, nombre)
         {
-            ColaRecibidos = new ListaEnlazada();
-            MensajesRecibidos = new ListaEnlazada();
+            ColaRecibidos = new ListaEnlazada<Paquete>();
+            MensajesRecibidos = new ListaEnlazada<Paquete>();
         }
 
         public override bool RecibirPaquete(Paquete paquete)
@@ -25,26 +22,34 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             if (paquete.IPDestino != IP) return false;
 
             ColaRecibidos.InsertarFinal(paquete);
-            paquete.Estado = "Recibido";
+            paquete.Estado = EstadoPaquete.Recibido;
             paquete.AgregarTraza("PC", IP);
             return true;
         }
 
         public override Paquete EnviarPaquete()
         {
-            return ColaPaquetes.EliminarInicio();
+            var paquete = ColaEnvio.EliminarInicio();
+            if (paquete != null)
+            {
+                paquete.Estado = EstadoPaquete.Enviado;
+                paquete.AgregarTraza("PC", IP);
+            }
+            return paquete;
         }
 
         public void ProcesarMensajesRecibidos()
         {
-            NodoLista actual = ColaRecibidos.Cabeza;
-            while (actual != null)
-            {
-                MensajesRecibidos.InsertarFinal(actual.Datos);
-                actual = actual.Siguiente;
-            }
-            ColaRecibidos = new ListaEnlazada(); // Limpiar cola
+            // Implementación para procesar mensajes completos
+            // Esta lógica debería verificar mensajes completos y moverlos a MensajesRecibidos
         }
-        #endregion
+
+        public override string ObtenerEstado()
+        {
+            return $"PC {Nombre} ({IP})\n" +
+                   $" - Paquetes en cola de envío: {ColaEnvio.Count}\n" +
+                   $" - Paquetes recibidos: {ColaRecibidos.Count}\n" +
+                   $" - Mensajes completos recibidos: {MensajesRecibidos.Count}";
+        }
     }
 }

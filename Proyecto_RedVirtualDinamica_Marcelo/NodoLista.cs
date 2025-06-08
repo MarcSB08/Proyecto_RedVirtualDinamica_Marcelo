@@ -6,21 +6,17 @@ using System.Threading.Tasks;
 
 namespace Proyecto_RedVirtualDinamica_Marcelo
 {
-    public class NodoLista
+    public class NodoLista<T>
     {
-        #region Atributos
-        public Paquete Datos { get; set; }
-        public NodoLista Siguiente { get; set; }
-        public NodoLista Anterior { get; set; }
-        #endregion
+        public T Datos { get; set; }
+        public NodoLista<T> Siguiente { get; set; }
+        public NodoLista<T> Anterior { get; set; }
 
-        #region Metodos
-        public NodoLista(Paquete datos)
+        public NodoLista(T datos)
         {
             Datos = datos;
             Siguiente = null;
             Anterior = null;
         }
-        #endregion
     }
 }

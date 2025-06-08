@@ -8,30 +8,31 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public class Subred
     {
-        #region Atributos
         public string ID { get; set; }
         public PC Computadora { get; set; }
         public Router Enrutador { get; set; }
-        #endregion
 
-        #region Metodos
-        public Subred(string id, string ip_base)
+        public Subred(string id, string ipBase, Red red)
         {
             ID = id;
-            Enrutador = new Router($"{ip_base}.0", $"R{id}");
-            Computadora = new PC($"{ip_base}.01", $"PC{id}");
+            Enrutador = new Router($"{ipBase}.0", $"R{id}", red);
+            Computadora = new PC($"{ipBase}.01", $"PC{id}");
         }
 
-        public bool EnviarPaquete(Paquete paquete)
+        public bool EnviarPaqueteDesdePC(Paquete paquete)
         {
             if (Computadora.IP == paquete.IPOrigen)
             {
-                return Enrutador.RecibirPaquete(paquete);
+                var paqueteEnviado = Computadora.EnviarPaquete();
+                if (paqueteEnviado != null)
+                {
+                    return Enrutador.RecibirPaquete(paqueteEnviado);
+                }
             }
             return false;
         }
 
-        public bool RecibirPaquete(Paquete paquete)
+        public bool RecibirPaqueteEnPC(Paquete paquete)
         {
             if (Computadora.IP == paquete.IPDestino)
             {
@@ -39,6 +40,12 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             }
             return false;
         }
-        #endregion
+
+        public string ObtenerEstado()
+        {
+            return $"Subred {ID}\n" +
+                   $" - {Computadora.ObtenerEstado()}\n" +
+                   $" - {Enrutador.ObtenerEstado()}";
+        }
     }
 }

@@ -23,19 +23,20 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             XY(15, 11); Console.WriteLine("1. Configurar red de comunicación");
             XY(15, 12); Console.WriteLine("2. Crear un mensaje");
             XY(15, 13); Console.WriteLine("3. Enviar un mensaje");
-            XY(15, 14); Console.WriteLine("4. Mostrar el status de la red");
-            XY(15, 15); Console.WriteLine("5. Mostrar el status de la subred");
-            XY(15, 16); Console.WriteLine("6. Mostrar el status de un equipo");
-            XY(15, 17); Console.WriteLine("7. Eliminar un paquete de la Cola");
-            XY(15, 18); Console.WriteLine("8. Visualizar mensajes recibidos");
-            XY(15, 19); Console.WriteLine("9. Consultar información de un paquete");
+            XY(15, 14); Console.WriteLine("4. Visualizar la traza de un paquete");
+            XY(15, 15); Console.WriteLine("5. Mostrar el status de la red");
+            XY(15, 16); Console.WriteLine("6. Mostrar el status de una subred");
+            XY(15, 17); Console.WriteLine("7. Mostrar el status de un equipo");
+            XY(15, 18); Console.WriteLine("8. Eliminar un paquete de la cola");
+            XY(15, 19); Console.WriteLine("9. Visualizar mensajes recibidos");
+            XY(15, 20); Console.WriteLine("10. Consultar información de un paquete");
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             XY(65, 11); Console.WriteLine("FUNCIONES EXTRA:"); Console.ResetColor();
-            XY(65, 12); Console.WriteLine("10. Vaciar Cola de un dispositivo");
-            XY(65, 13); Console.WriteLine("11. Eliminar subred específica");
-            XY(65, 14); Console.WriteLine("12. Eliminar toda la red");
-            XY(15, 20); Console.WriteLine("0. Salir");
+            XY(65, 12); Console.WriteLine("11. Vaciar cola de un dispositivo");
+            XY(65, 13); Console.WriteLine("12. Eliminar subred específica");
+            XY(65, 14); Console.WriteLine("13. Eliminar toda la red");
+            XY(15, 21); Console.WriteLine("0. Salir");
             XY(8, 23); Console.Write("-Opción: ");
 
             string opcion = Console.ReadLine();

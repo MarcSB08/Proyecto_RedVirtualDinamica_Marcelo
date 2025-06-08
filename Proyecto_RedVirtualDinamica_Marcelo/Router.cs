@@ -8,33 +8,54 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 {
     public class Router : Dispositivo
     {
-        #region Atributos
         private const int CapacidadMaxima = 4;
-        #endregion
+        public Red Red { get; set; }
 
-        #region Metodos
-        public Router(string ip, string nombre) : base(ip, nombre) { }
+        public Router(string ip, string nombre, Red red) : base(ip, nombre)
+        {
+            Red = red;
+        }
 
         public override bool RecibirPaquete(Paquete paquete)
         {
-            if (ColaPaquetes.Contar() >= CapacidadMaxima)
+            if (ColaEnvio.Count >= CapacidadMaxima)
                 return false;
 
-            ColaPaquetes.InsertarFinal(paquete);
-            paquete.Estado = "Enviado";
+            ColaEnvio.InsertarFinal(paquete);
+            paquete.Estado = EstadoPaquete.EnTransito;
             paquete.AgregarTraza("Router", IP);
             return true;
         }
 
         public override Paquete EnviarPaquete()
         {
-            Paquete paquete = ColaPaquetes.EliminarInicio();
+            var paquete = ColaEnvio.EliminarInicio();
             if (paquete != null)
             {
-                paquete.Estado = "Enviado";
+                paquete.Estado = EstadoPaquete.Enviado;
+                paquete.AgregarTraza("Router", IP);
             }
             return paquete;
         }
-        #endregion
+
+        public bool ReenviarPaquete(Paquete paquete)
+        {
+            // Lógica para reenviar a otro router si este está lleno
+            foreach (var router in Red.ObtenerRouters())
+            {
+                if (router.IP != IP && router.RecibirPaquete(paquete))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override string ObtenerEstado()
+        {
+            return $"Router {Nombre} ({IP})\n" +
+                   $" - Paquetes en cola: {ColaEnvio.Count}/{CapacidadMaxima}\n" +
+                   $" - Estado: {(ColaEnvio.Count >= CapacidadMaxima ? "Lleno" : "Disponible")}";
+        }
     }
 }

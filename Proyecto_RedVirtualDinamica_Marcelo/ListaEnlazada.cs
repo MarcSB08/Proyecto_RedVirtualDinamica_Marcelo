@@ -6,61 +6,62 @@ using System.Threading.Tasks;
 
 namespace Proyecto_RedVirtualDinamica_Marcelo
 {
-    public class ListaEnlazada
+    public class ListaEnlazada<T>
     {
-        #region Atributos
-        public NodoLista Cabeza;
-        public NodoLista Cola;
-        #endregion
+        public NodoLista<T> Cabeza { get; private set; }
+        public NodoLista<T> Cola { get; private set; }
+        public int Count { get; private set; }
 
-        #region Metodos
         public ListaEnlazada()
         {
             Cabeza = null;
             Cola = null;
+            Count = 0;
         }
 
         public bool EstaVacia() => Cabeza == null;
 
-        public void InsertarFinal(Paquete datos)
+        public void InsertarFinal(T datos)
         {
-            NodoLista nuevo_nodo = new NodoLista(datos);
+            NodoLista<T> nuevoNodo = new NodoLista<T>(datos);
 
             if (EstaVacia())
             {
-                Cabeza = nuevo_nodo;
-                Cola = nuevo_nodo;
+                Cabeza = nuevoNodo;
+                Cola = nuevoNodo;
             }
             else
             {
-                nuevo_nodo.Anterior = Cola;
-                Cola.Siguiente = nuevo_nodo;
-                Cola = nuevo_nodo;
+                nuevoNodo.Anterior = Cola;
+                Cola.Siguiente = nuevoNodo;
+                Cola = nuevoNodo;
             }
+            Count++;
         }
 
-        public void InsertarInicio(Paquete datos)
+        public void InsertarInicio(T datos)
         {
-            NodoLista nuevo_nodo = new NodoLista(datos);
+            NodoLista<T> nuevoNodo = new NodoLista<T>(datos);
 
             if (EstaVacia())
             {
-                Cabeza = nuevo_nodo;
-                Cola = nuevo_nodo;
+                Cabeza = nuevoNodo;
+                Cola = nuevoNodo;
             }
             else
             {
-                nuevo_nodo.Siguiente = Cabeza;
-                Cabeza.Anterior = nuevo_nodo;
-                Cabeza = nuevo_nodo;
+                nuevoNodo.Siguiente = Cabeza;
+                Cabeza.Anterior = nuevoNodo;
+                Cabeza = nuevoNodo;
             }
+            Count++;
         }
 
-        public Paquete EliminarInicio()
+        public T EliminarInicio()
         {
-            if (EstaVacia()) return null;
+            if (EstaVacia()) return default(T);
 
-            Paquete datos = Cabeza.Datos;
+            T datos = Cabeza.Datos;
 
             if (Cabeza.Siguiente != null)
             {
@@ -72,15 +73,16 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 Cabeza = null;
                 Cola = null;
             }
+            Count--;
 
             return datos;
         }
 
-        public Paquete EliminarFinal()
+        public T EliminarFinal()
         {
-            if (EstaVacia()) return null;
+            if (EstaVacia()) return default(T);
 
-            Paquete datos = Cola.Datos;
+            T datos = Cola.Datos;
 
             if (Cola.Anterior != null)
             {
@@ -92,17 +94,18 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 Cabeza = null;
                 Cola = null;
             }
+            Count--;
 
             return datos;
         }
 
-        public NodoLista Buscar(string id_paquete)
+        public NodoLista<T> Buscar(T dato)
         {
-            NodoLista actual = Cabeza;
+            NodoLista<T> actual = Cabeza;
 
             while (actual != null)
             {
-                if (actual.Datos.IDPaquete == id_paquete)
+                if (EqualityComparer<T>.Default.Equals(actual.Datos, dato))
                     return actual;
                 actual = actual.Siguiente;
             }
@@ -110,9 +113,9 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             return null;
         }
 
-        public bool Eliminar(string id_paquete)
+        public bool Eliminar(T dato)
         {
-            NodoLista actual = Buscar(id_paquete);
+            NodoLista<T> actual = Buscar(dato);
             if (actual == null) return false;
 
             if (actual.Anterior != null)
@@ -125,38 +128,32 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             else
                 Cola = actual.Anterior;
 
+            Count--;
             return true;
         }
 
-        public int Contar()
+        public List<T> ToList()
         {
-            int count = 0;
-            NodoLista actual = Cabeza;
+            List<T> lista = new List<T>();
+            NodoLista<T> actual = Cabeza;
 
             while (actual != null)
             {
-                count++;
+                lista.Add(actual.Datos);
                 actual = actual.Siguiente;
             }
 
-            return count;
+            return lista;
         }
 
-        public void InsertarDespues(NodoLista nodo_anterior, Paquete datos)
+        public IEnumerable<T> Recorrer()
         {
-            if (nodo_anterior == null) return;
-
-            NodoLista nuevo_nodo = new NodoLista(datos);
-            nuevo_nodo.Siguiente = nodo_anterior.Siguiente;
-            nuevo_nodo.Anterior = nodo_anterior;
-
-            if (nodo_anterior.Siguiente != null)
-                nodo_anterior.Siguiente.Anterior = nuevo_nodo;
-            else
-                Cola = nuevo_nodo;
-
-            nodo_anterior.Siguiente = nuevo_nodo;
+            NodoLista<T> actual = Cabeza;
+            while (actual != null)
+            {
+                yield return actual.Datos;
+                actual = actual.Siguiente;
+            }
         }
-        #endregion
     }
 }

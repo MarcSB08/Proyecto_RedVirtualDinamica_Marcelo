@@ -20,6 +20,18 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 switch (opcion)
                 {
                     case "1":
+                        red.ConfigurarRed();
+                        break;
+                    case "2":
+                        red.CrearMensaje();
+                        break;
+                    case "3":
+                        red.Enviar();
+                        break;
+                    case "4":
+                        break;
+                    case "5":
+                        red.MostrarStatusRed();
                         break;
                     case "0":
                         Interfaz.Adios();
