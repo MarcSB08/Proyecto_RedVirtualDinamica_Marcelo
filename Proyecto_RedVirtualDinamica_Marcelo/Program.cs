@@ -49,6 +49,15 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                     case "10":
                         red.ConsultarInformacionPaquete();
                         break;
+                    case "11":
+                        red.VaciarColaDispositivo();
+                        break;
+                    case "12":
+                        red.EliminarSubredEspecifica();
+                        break;
+                    case "13":
+                        red.EliminarTodaLaRed();
+                        break;
                     case "0":
                         Interfaz.Adios();
                         Interfaz.ImprimirLogoUSM();

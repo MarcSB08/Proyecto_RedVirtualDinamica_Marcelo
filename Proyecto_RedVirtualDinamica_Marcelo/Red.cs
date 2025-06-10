@@ -243,7 +243,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             Interfaz.Continuar();
         }
 
-        public void Enviar()  //Opcion 3
+        public void Enviar()  //Opción 3
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -397,7 +397,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 s.Enrutador.IP.StartsWith(ip.Split('.')[0]));
         }
 
-        public void VisualizarTrazaPaquete()  // Opción 4
+        public void VisualizarTrazaPaquete()  //Opción 4
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -414,7 +414,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 }
 
                 Console.Write("\nIngrese el ID del paquete (ej: M01P01): ");
-                string id_Paquete = Console.ReadLine().Trim();
+                string id_Paquete = Console.ReadLine().Trim().ToUpper();
 
                 Paquete paquete = null;
                 Dispositivo dispositivo_Actual = null;
@@ -522,7 +522,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             Interfaz.Continuar();
         }
 
-        public void MostrarStatusRed()  //Opcion 5
+        public void MostrarStatusRed()  //Opción 5
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -629,7 +629,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             }
         }
 
-        public void MostrarStatusSubred()  // Opción 6
+        public void MostrarStatusSubred()  //Opción 6
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -760,7 +760,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             Interfaz.Continuar();
         }
 
-        public void MostrarStatusEquipo()  // Opción 7
+        public void MostrarStatusEquipo()  //Opción 7
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkBlue;
@@ -919,7 +919,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             Interfaz.Continuar();
         }
 
-        public void EliminarPaquete()  // Opción 8
+        public void EliminarPaquete()  //Opción 8
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -1184,7 +1184,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             Interfaz.Continuar();
         }
 
-        public void ConsultarInformacionPaquete() // Opcion 10
+        public void ConsultarInformacionPaquete() //Opción 10
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -1241,7 +1241,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 else
                 {
                     Console.WriteLine("┌───────┬────────────┬──────────────┐");
-                    Console.WriteLine("│ Orden │ Dispositivo │ Dirección IP │");
+                    Console.WriteLine("│ Orden │ Dispositivo│ Dirección IP │");
                     Console.WriteLine("├───────┼────────────┼──────────────┤");
 
                     int orden = 1;
@@ -1266,7 +1266,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         {
             foreach (var subred in Subredes)
             {
-                // Buscar en router
                 var nodo_Router = subred.Enrutador.ColaEnvio.Cabeza;
                 while (nodo_Router != null)
                 {
@@ -1299,6 +1298,281 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             }
 
             return (null, null);
+        }
+
+        public void VaciarColaDispositivo()  //Opción 11
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("════ VACIAR COLA DE DISPOSITIVO ════");
+            Console.ResetColor();
+
+            try
+            {
+                if (Subredes.Count == 0)
+                {
+                    Interfaz.Error("No hay ninguna red configurada.\n");
+                    Interfaz.Continuar();
+                    return;
+                }
+
+                Console.WriteLine("\nDispositivos disponibles:");
+                Console.WriteLine("\n[ROUTERS]");
+                foreach (var subred in Subredes)
+                {
+                    Console.WriteLine($"- {subred.Enrutador.Nombre} ({subred.Enrutador.IP}) - Paquetes: {subred.Enrutador.ColaEnvio.Count}/4");
+                }
+
+                Console.WriteLine("\n[PCs]");
+                foreach (var subred in Subredes)
+                {
+                    Console.WriteLine($"- {subred.Computadora.Nombre} ({subred.Computadora.IP})");
+                    Console.WriteLine($"  - Envío: {subred.Computadora.ColaEnvio.Count} paquetes");
+                    Console.WriteLine($"  - Recibidos: {subred.Computadora.ColaRecibidos.Count} paquetes");
+                }
+
+                Console.Write("\nIngrese la IP del dispositivo: ");
+                string ip_Dispositivo = Console.ReadLine().Trim();
+
+                Dispositivo dispositivo = BuscarDispositivoPorIP(ip_Dispositivo);
+                if (dispositivo == null)
+                {
+                    Interfaz.Error("No existe un dispositivo con esa IP.\n");
+                    Interfaz.Continuar();
+                    return;
+                }
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write($"\n¿Está seguro que desea vaciar la(s) cola(s) de {dispositivo.Nombre} ({dispositivo.IP})? (S/N): ");
+                Console.ResetColor();
+                string confirmacion = Console.ReadLine().Trim().ToUpper();
+
+                if (confirmacion != "S")
+                {
+                    Console.WriteLine("\nOperación cancelada.");
+                    Interfaz.Continuar();
+                    return;
+                }
+
+                if (dispositivo is Router router)
+                {
+                    int cantidad = router.ColaEnvio.Count;
+                    router.ColaEnvio = new ListaEnlazada<Paquete>();
+                    Console.WriteLine($"\nSe han eliminado {cantidad} paquetes del router {router.IP}");
+                }
+                else if (dispositivo is PC pc)
+                {
+                    Console.WriteLine("\nSeleccione qué cola desea vaciar:");
+                    Console.WriteLine("1. Cola de envío");
+                    Console.WriteLine("2. Cola de recibidos");
+                    Console.WriteLine("3. Ambas colas");
+                    Console.Write("Opción: ");
+                    string opcion = Console.ReadLine().Trim();
+
+                    int cantidad_Envio = 0;
+                    int cantidad_Recibidos = 0;
+
+                    switch (opcion)
+                    {
+                        case "1":
+                            cantidad_Envio = pc.ColaEnvio.Count;
+                            pc.ColaEnvio = new ListaEnlazada<Paquete>();
+                            Console.WriteLine($"\nSe han eliminado {cantidad_Envio} paquetes de la cola de envío.");
+                            break;
+                        case "2":
+                            cantidad_Recibidos = pc.ColaRecibidos.Count;
+                            pc.ColaRecibidos = new ListaEnlazada<Paquete>();
+                            Console.WriteLine($"\nSe han eliminado {cantidad_Recibidos} paquetes de la cola de recibidos.");
+                            break;
+                        case "3":
+                            cantidad_Envio = pc.ColaEnvio.Count;
+                            cantidad_Recibidos = pc.ColaRecibidos.Count;
+                            pc.ColaEnvio = new ListaEnlazada<Paquete>();
+                            pc.ColaRecibidos = new ListaEnlazada<Paquete>();
+                            Console.WriteLine($"\nSe han eliminado {cantidad_Envio + cantidad_Recibidos} paquetes (envío: {cantidad_Envio}, recibidos: {cantidad_Recibidos}).");
+                            break;
+                        default:
+                            Interfaz.Error("Opción no válida.\n");
+                            break;
+                    }
+                }
+
+                ActualizarEstadosMensajes();
+            }
+            catch (Exception ex)
+            {
+                Interfaz.Error($"Error al vaciar cola: {ex.Message}\n");
+            }
+
+            Interfaz.Continuar();
+        }
+
+        private void ActualizarEstadosMensajes()
+        {
+            foreach (var mensaje in Mensajes)
+            {
+                bool todos_Eliminados = true;
+                var nodo = mensaje.Paquetes.Cabeza;
+
+                while (nodo != null)
+                {
+                    if (nodo.Datos.Estado != EstadoPaquete.Dañado)
+                    {
+                        todos_Eliminados = false;
+                        break;
+                    }
+                    nodo = nodo.Siguiente;
+                }
+
+                if (todos_Eliminados)
+                {
+                    mensaje.Estado = EstadoMensaje.Dañado;
+                }
+            }
+        }
+
+        public void EliminarSubredEspecifica()  //Opción 12
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("════ ELIMINAR SUBRED ESPECÍFICA ════");
+            Console.ResetColor();
+
+            try
+            {
+                if (Subredes.Count == 0)
+                {
+                    Interfaz.Error("No hay ninguna red configurada.\n");
+                    Interfaz.Continuar();
+                    return;
+                }
+
+                Console.WriteLine("\nSubredes existentes:");
+                foreach (var subred in Subredes)
+                {
+                    Console.WriteLine($"- Subred {subred.ID}");
+                    Console.WriteLine($"  Router: {subred.Enrutador.IP} ({subred.Enrutador.Nombre})");
+                    Console.WriteLine($"  PC: {subred.Computadora.IP} ({subred.Computadora.Nombre})");
+                    Console.WriteLine($"  Paquetes en router: {subred.Enrutador.ColaEnvio.Count}/4");
+                    Console.WriteLine($"  Paquetes en PC (envío/recibidos): {subred.Computadora.ColaEnvio.Count}/{subred.Computadora.ColaRecibidos.Count}\n");
+                }
+
+                Console.Write("\nIngrese el ID de la subred a eliminar (ej: 01): ");
+                string id_Subred = Console.ReadLine().Trim();
+
+                var subred_Eliminar = Subredes.FirstOrDefault(s => s.ID == id_Subred);
+                if (subred_Eliminar == null)
+                {
+                    Interfaz.Error($"No existe una subred con ID: {id_Subred}\n");
+                    Interfaz.Continuar();
+                    return;
+                }
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nSe eliminará la siguiente subred:");
+                Console.ResetColor();
+                Console.WriteLine($"- ID: {subred_Eliminar.ID}");
+                Console.WriteLine($"- Router: {subred_Eliminar.Enrutador.IP} ({subred_Eliminar.Enrutador.Nombre})");
+                Console.WriteLine($"- PC: {subred_Eliminar.Computadora.IP} ({subred_Eliminar.Computadora.Nombre})");
+                Console.WriteLine($"- Paquetes en router: {subred_Eliminar.Enrutador.ColaEnvio.Count}");
+                Console.WriteLine($"- Paquetes en PC: {subred_Eliminar.Computadora.ColaEnvio.Count + subred_Eliminar.Computadora.ColaRecibidos.Count}");
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("\n¿Está seguro que desea eliminar esta subred? (S/N): ");
+                Console.ResetColor();
+                string confirmacion = Console.ReadLine().Trim().ToUpper();
+
+                if (confirmacion != "S")
+                {
+                    Console.WriteLine("\nOperación cancelada.");
+                    Interfaz.Continuar();
+                    return;
+                }
+
+                int mensajes_Eliminados = 0;
+                for (int i = Mensajes.Count - 1; i >= 0; i--)
+                {
+                    var mensaje = Mensajes[i];
+                    if (mensaje.IPOrigen == subred_Eliminar.Computadora.IP ||
+                        mensaje.IPDestino == subred_Eliminar.Computadora.IP)
+                    {
+                        Mensajes.RemoveAt(i);
+                        mensajes_Eliminados++;
+                    }
+                }
+
+                Subredes.Remove(subred_Eliminar);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nSubred eliminada exitosamente!");
+                Console.ResetColor();
+                Console.WriteLine($"- Mensajes eliminados: {mensajes_Eliminados}");
+                Console.WriteLine($"- Total subredes restantes: {Subredes.Count}");
+            }
+            catch (Exception ex)
+            {
+                Interfaz.Error($"Error al eliminar subred: {ex.Message}\n");
+            }
+
+            Interfaz.Continuar();
+        }
+
+        public void EliminarTodaLaRed() //Opción 13
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("════ ELIMINAR TODA LA RED ════");
+            Console.ResetColor();
+
+            try
+            {
+                if (Subredes.Count == 0)
+                {
+                    Interfaz.Error("No hay ninguna red configurada para eliminar.\n");
+                    Interfaz.Continuar();
+                    return;
+                }
+
+                Console.WriteLine("\nResumen de la red actual:");
+                Console.WriteLine($"- Total subredes: {Subredes.Count}");
+                Console.WriteLine($"- Total routers: {Subredes.Count}");
+                Console.WriteLine($"- Total PCs: {Subredes.Count}");
+                Console.WriteLine($"- Total mensajes en el sistema: {Mensajes.Count}");
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n¡ADVERTENCIA! Esta acción es irreversible.");
+                Console.WriteLine("Se eliminarán todos los dispositivos y mensajes de la red.");
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("\n¿Está absolutamente seguro que desea eliminar toda la red? (S/N): ");
+                Console.ResetColor();
+                string confirmacion = Console.ReadLine().Trim().ToUpper();
+
+                if (confirmacion != "S")
+                {
+                    Console.WriteLine("\nOperación cancelada.");
+                    Interfaz.Continuar();
+                    return;
+                }
+
+                int total_Subredes = Subredes.Count;
+                int total_Mensajes = Mensajes.Count;
+
+                Subredes.Clear();
+                Mensajes.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\n¡Red eliminada exitosamente!");
+                Console.ResetColor();
+                Console.WriteLine($"- Subredes eliminadas: {total_Subredes}");
+                Console.WriteLine($"- Mensajes eliminados: {total_Mensajes}");
+                Console.WriteLine("\nLa red ha sido completamente restablecida.");
+            }
+            catch (Exception ex)
+            {
+                Interfaz.Error($"Error al eliminar la red: {ex.Message}\n");
+            }
+
+            Interfaz.Continuar();
         }
         #endregion
     }

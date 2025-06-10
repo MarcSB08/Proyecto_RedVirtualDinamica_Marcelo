@@ -11,7 +11,6 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         Nuevo,
         Enviado,
         Recibido,
-        Procesado,
         Dañado
     }
 }
