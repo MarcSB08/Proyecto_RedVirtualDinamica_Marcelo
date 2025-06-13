@@ -13,9 +13,9 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         public static string Menu()
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.ForegroundColor = ConsoleColor.Green;
             Borde();
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Red;
 
             Titulo();
             Console.ResetColor();
@@ -30,15 +30,17 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             XY(15, 19); Console.WriteLine("9. Visualizar mensajes recibidos");
             XY(15, 20); Console.WriteLine("10. Consultar información de un paquete");
 
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             XY(65, 11); Console.WriteLine("FUNCIONES EXTRA:"); Console.ResetColor();
             XY(65, 12); Console.WriteLine("11. Vaciar cola de un dispositivo");
             XY(65, 13); Console.WriteLine("12. Eliminar subred específica");
             XY(65, 14); Console.WriteLine("13. Eliminar toda la red");
+            Console.ForegroundColor = ConsoleColor.Red;
             XY(15, 21); Console.WriteLine("0. Salir");
+            Console.ForegroundColor = ConsoleColor.Cyan;
             XY(8, 23); Console.Write("-Opción: ");
 
-            string opcion = Console.ReadLine();
+            string opcion = Console.ReadLine().Trim();
             return opcion;
         }
 
@@ -98,6 +100,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             int x = 15, y = 10;
 
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Thread.Sleep(50); XY(x, y++); Console.WriteLine("    _       _ _               ____  ");
             Thread.Sleep(50); XY(x, y++); Console.WriteLine("   / \\   __| (_) ___  ___   _|  _ \\ ");
             Thread.Sleep(50); XY(x, y++); Console.WriteLine("  / _ \\ / _` | |/ _ \\ __| (_) | | |");

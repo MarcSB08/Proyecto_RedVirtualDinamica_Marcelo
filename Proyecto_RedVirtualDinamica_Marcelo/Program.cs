@@ -63,7 +63,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                         Interfaz.ImprimirLogoUSM();
                         break;
                     default:
-                        Interfaz.XY(17, 23); Interfaz.Error("Opción no válida. Intente nuevamente.");
+                        Interfaz.XY(17, 23); Interfaz.Error("Opción no válida.");
                         Console.ReadKey();
                         break;
                 }

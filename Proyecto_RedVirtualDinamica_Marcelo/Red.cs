@@ -23,7 +23,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         public void ConfigurarRed()  // Opción 1
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("=== CONFIGURACIÓN DE LA RED ===");
             Console.ResetColor();
 
@@ -71,7 +71,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 
                     if (cantidad_Subredes < 1)
                     {
-                        Interfaz.Error("La cantidad de subredes debe ser al menos 1.\n");
+                        Interfaz.Error("La cantidad de subredes debe ser mínimo 1.\n");
                         entrada_Invalida = true;
                     }
                     else
@@ -82,14 +82,14 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 catch (FormatException)
                 {
                     entrada_Invalida = true;
-                    Interfaz.Error("Entrada no válida. Debe ingresar un número entero.\n");
+                    Interfaz.Error("Entrada no válida, debe ingresar un número entero.\n");
                 }
             } while (entrada_Invalida);
 
             for (int i = 1; i <= cantidad_Subredes; i++)
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine($"\nConfiguración de la SubRed #{i}:");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nConfiguración de la Subred #{i}:");
                 Console.ResetColor();
 
                 string numero_Red;
@@ -97,7 +97,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 
                 do
                 {
-                    Console.Write("Ingrese número de red para la subred (ej: 180): ");
+                    Console.Write("Ingrese número de red para la subred (por ejemplo 180): ");
                     numero_Red = Console.ReadLine().Trim();
 
                     red_Valida = ValidarNumeroRed(numero_Red);
@@ -149,7 +149,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         public void CrearMensaje()  //Opción 2
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine("════ CREAR MENSAJE ════");
             Console.ResetColor();
 
@@ -162,8 +162,8 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 
             try
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\nPCs disponibles en la red:");
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine("\nPCs disponibles en toda la red:");
                 Console.ResetColor();
 
                 foreach (var subred in Subredes)
@@ -171,7 +171,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                     Console.WriteLine($"- PC: {subred.Computadora.IP} ({subred.Computadora.Nombre})");
                 }
 
-                Console.Write("\nIngrese IP de origen (formato X.01): ");
+                Console.Write("\nIngrese IP de origen: ");
                 string ip_Origen = Console.ReadLine().Trim();
                 var pc_Origen = Subredes.Select(s => s.Computadora).FirstOrDefault(pc => pc.IP == ip_Origen);
 
@@ -182,7 +182,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                     return;
                 }
 
-                Console.Write("\nIngrese IP de destino (formato X.01): ");
+                Console.Write("\nIngrese IP de destino: ");
                 string ip_Destino = Console.ReadLine().Trim();
 
                 if (ip_Destino == ip_Origen)
@@ -252,6 +252,13 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 
             try
             {
+                if (Subredes.Count == 0)
+                {
+                    Interfaz.Error("No hay ninguna red configurada.\n");
+                    Interfaz.Continuar();
+                    return;
+                }
+
                 Console.Write("\nIngrese la IP del equipo que enviará el paquete: ");
                 string ip = Console.ReadLine().Trim();
                 Dispositivo equipo = BuscarDispositivoPorIP(ip);
@@ -290,7 +297,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
 
                     if (destino.ColaEnvio.Count >= 4) // Capacidad máxima del router
                     {
-                        Interfaz.Error("El router está lleno. Paquete será reenviado al final de la cola del PC.\n");
+                        Interfaz.Error("El router está lleno. El paquete será reenviado al final de la cola del PC.\n");
                         pc_Origen.ColaEnvio.InsertarFinal(paquete);
                         Interfaz.Continuar();
                         return;
@@ -333,7 +340,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                     {
                         Router router_Destino = subred_Destino.Enrutador;
 
-                        if (router_Destino.ColaEnvio.Count >= 4) // Capacidad máxima del router
+                        if (router_Destino.ColaEnvio.Count >= 4)
                         {
                             Interfaz.Error("El router destino está lleno. Intentando reenviar por otra ruta...\n");
 
@@ -401,7 +408,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("════ VISUALIZAR TRAZA DE PAQUETE ════");
+            Console.WriteLine("════ VISUALIZAR TRAZA DE UN PAQUETE ════");
             Console.ResetColor();
 
             try
@@ -413,7 +420,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                     return;
                 }
 
-                Console.Write("\nIngrese el ID del paquete (ej: M01P01): ");
+                Console.Write("\nIngrese el ID del paquete (por ejemplo M01P01): ");
                 string id_Paquete = Console.ReadLine().Trim().ToUpper();
 
                 Paquete paquete = null;
@@ -540,12 +547,12 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
             foreach (var subred in Subredes)
             {
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("════ ESTADO DE LA RED ════");
                 Console.ResetColor();
 
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"\nSubRed {subred.ID}:");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nSubred {subred.ID}:");
                 Console.ResetColor();
 
                 Console.WriteLine($"Router ({subred.Enrutador.IP}) - Cola de Envío ({subred.Enrutador.ColaEnvio.Count}/4):");
@@ -654,7 +661,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                     Console.WriteLine($"- Subred {subred.ID} (Router: {subred.Enrutador.IP}, PC: {subred.Computadora.IP})");
                 }
 
-                Console.Write("\nIngrese el ID de la subred que desea visualizar (ej: 01): ");
+                Console.Write("\nIngrese el ID de la subred que desea visualizar (por ejemplo 01): ");
                 string id_Subred = Console.ReadLine().Trim();
 
                 var subred_Seleccionada = Subredes.FirstOrDefault(s => s.ID == id_Subred);
@@ -793,9 +800,9 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 }
 
                 Console.Write("\nIngrese la IP del equipo que desea visualizar: ");
-                string ipEquipo = Console.ReadLine().Trim();
+                string ip_Equipo = Console.ReadLine().Trim();
 
-                Dispositivo equipo = BuscarDispositivoPorIP(ipEquipo);
+                Dispositivo equipo = BuscarDispositivoPorIP(ip_Equipo);
                 if (equipo == null)
                 {
                     Interfaz.Error("No existe un equipo con esa IP.\n");
@@ -1114,9 +1121,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                 var mensaje_Original = Mensajes.FirstOrDefault(m => m.IDMensaje == id_Mensaje && m.IPDestino == pc.IP);
                 if (mensaje_Original == null) continue;
 
-                var paquetes_Mensaje = paquetes_Recibidos
-                    .Where(p => p.IDPaquete.StartsWith(id_Mensaje))
-                    .ToList();
+                var paquetes_Mensaje = paquetes_Recibidos.Where(p => p.IDPaquete.StartsWith(id_Mensaje)).ToList();
 
                 bool completo = paquetes_Mensaje.Count == mensaje_Original.Paquetes.Count;
                 bool orden_Correcto = true;
@@ -1200,7 +1205,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                     return;
                 }
 
-                Console.Write("\nIngrese el ID completo del paquete (ej: M01P01): ");
+                Console.Write("\nIngrese el ID completo del paquete (por ejemplo M01P01): ");
                 string id_Paquete = Console.ReadLine().Trim().ToUpper();
 
                 (Paquete paquete, Dispositivo dispositivo) = BuscarPaqueteEnRed(id_Paquete);
@@ -1304,7 +1309,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("════ VACIAR COLA DE DISPOSITIVO ════");
+            Console.WriteLine("════ VACIAR COLA DE UN DISPOSITIVO ════");
             Console.ResetColor();
 
             try
@@ -1457,7 +1462,7 @@ namespace Proyecto_RedVirtualDinamica_Marcelo
                     Console.WriteLine($"  Paquetes en PC (envío/recibidos): {subred.Computadora.ColaEnvio.Count}/{subred.Computadora.ColaRecibidos.Count}\n");
                 }
 
-                Console.Write("\nIngrese el ID de la subred a eliminar (ej: 01): ");
+                Console.Write("\nIngrese el ID de la subred a eliminar (por ejemplo 01): ");
                 string id_Subred = Console.ReadLine().Trim();
 
                 var subred_Eliminar = Subredes.FirstOrDefault(s => s.ID == id_Subred);
